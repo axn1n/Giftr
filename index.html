@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Dearest Babeeeee</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        velvet: '#120104',
+                        velvetDark: '#0a0002',
+                        crimson: '#8B0000',
+                        roseGold: '#E8A598',
+                        blushPink: '#FFB6C1',
+                        warmGold: '#D4AF37',
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        dancing: ['Dancing Script', 'cursive'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Dancing+Script:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Canvas Confetti CDN for Celebration Effects -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            background-color: #120104;
+            color: #fce4ec;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #120104;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8B0000;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Custom Glassmorphism Styles */
+        .glass-card {
+            background: rgba(32, 3, 8, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(232, 165, 152, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card-gold {
+            background: rgba(45, 5, 13, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+        }
+
+        .gold-glow-text {
+            text-shadow: 0 0 12px rgba(212, 175, 55, 0.5), 0 0 25px rgba(232, 165, 152, 0.3);
+        }
+
+        /* Screen Transitions */
+        .spa-screen {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px) scale(0.98);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .spa-screen.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Envelope Interactive Styles */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 280px;
+            background: #2d050d;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.2);
+            cursor: pointer;
+            transition: transform 0.4s ease;
+        }
+
+        .envelope:hover {
+            transform: translateY(-5px);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 225px solid transparent;
+            border-right: 225px solid transparent;
+            border-top: 150px solid #3d0712;
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 3;
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .wax-seal {
+            position: absolute;
+            top: 130px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #D4AF37 0%, #8B0000 80%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.4);
+            border: 2px solid #D4AF37;
+            z-index: 4;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .envelope.open .wax-seal {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+            pointer-events: none;
+        }
+
+        .letter-content {
+            background: #fffdf9;
+            color: #2b1810;
+            background-image: radial-gradient(#e5d7c3 0.75px, transparent 0.75px);
+            background-size: 16px 16px;
+            box-shadow: inset 0 0 30px rgba(139, 0, 0, 0.08);
+        }
+
+        /* Floating Animation */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+
+        .animate-float {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        /* Floating Heart Reaction Animation */
+        @keyframes heartUp {
+            0% { opacity: 1; transform: translateY(0) scale(0.8); }
+            100% { opacity: 0; transform: translateY(-120px) scale(1.4); }
+        }
+
+        .floating-heart-particle {
+            position: absolute;
+            pointer-events: none;
+            animation: heartUp 1.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between selection:bg-crimson selection:text-white">
+
+    <!-- Background Animated Canvas -->
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Top Glow Overlay -->
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-b from-crimson/20 via-roseGold/10 to-transparent blur-3xl pointer-events-none z-0"></div>
+
+    <!-- MAIN WRAPPER -->
+    <div class="relative z-10 flex flex-col min-h-screen">
+
+        <!-- HEADER -->
+        <header class="px-4 py-4 md:px-8 max-w-6xl mx-auto w-full flex items-center justify-between glass-card rounded-b-2xl mt-0 md:mt-2 border-t-0">
+            <!-- Title Badge -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-crimson to-warmGold p-[1.5px] flex items-center justify-center shadow-lg shadow-crimson/30">
+                    <div class="w-full h-full bg-velvet rounded-full flex items-center justify-center">
+                        <i class="fa-solid font-bold text-roseGold text-sm">KS</i>
+                    </div>
+                </div>
+                <div>
+                    <!-- EDITABLE PLACEHOLDER: Main Site Title / Name Badge -->
+                    <h1 class="font-cinzel text-sm md:text-base font-bold text-warmGold tracking-wider gold-glow-text">
+                    </h1>
+                    <p class="text-[10px] md:text-xs text-roseGold/80 tracking-widest uppercase font-light">My Dearest Love</p>
+                </div>
+            </div>
+
+            <!-- Progress Step Dots -->
+            <div class="hidden sm:flex items-center space-x-2 md:space-x-3" id="progressDotsContainer">
+                <!-- Dots populated dynamically via JS -->
+            </div>
+
+            <!-- Audio Controller -->
+            <button id="audioToggleBtn" onclick="toggleAmbientAudio()" class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-crimson/30 border border-warmGold/30 text-roseGold hover:text-white hover:border-warmGold transition-all duration-300 group">
+                <i id="audioIcon" class="fa-solid fa-music text-xs group-hover:scale-110 transition-transform"></i>
+                <span id="audioStatusText" class="text-xs font-medium">Sound: Off</span>
+            </button>
+        </header>
+
+        <!-- MAIN SPA CONTENT AREA -->
+        <main class="flex-grow max-w-5xl mx-auto w-full px-4 py-6 md:py-8 flex flex-col justify-center">
+
+            <!-- SCREEN 1: ANNIVERSARY COUNTDOWN & LOCK SCREEN -->
+            <section id="screen-1" class="spa-screen active">
+                <div class="text-center space-y-6">
+                    
+                    <!-- EDITABLE PLACEHOLDER: Subtitle & Main Banner Text -->
+                    <div class="inline-block px-4 py-1.5 rounded-full bg-crimson/20 border border-crimson/40 text-blushPink text-xs md:text-sm font-medium tracking-wide mb-2 animate-pulse">
+                        <i class="fa-solid fa-heart text-crimson mr-1.5"></i> Welcome to Our Special Portal
+                    </div>
+
+                    <h2 class="font-cinzel text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-warmGold via-roseGold to-blushPink gold-glow-text leading-tight">
+                        Our Journey Together
+                    </h2>
+                    <p class="font-dancing text-xl md:text-3xl text-roseGold max-w-2xl mx-auto font-medium">
+                        "Every single second with you, Babeeeeee , You are my favorite story."
+                    </p>
+
+                    <!-- COUNTDOWN BOX -->
+                    <div class="max-w-2xl mx-auto mt-8 p-6 md:p-8 rounded-2xl glass-card-gold relative overflow-hidden">
+                        <div class="text-xs font-semibold tracking-widest text-warmGold uppercase mb-4 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-hourglass-half text-roseGold animate-spin" style="animation-duration: 8s;"></i>
+                            Countdown To Our Next Milestone
+                        </div>
+
+                        <!-- Timer Grid -->
+                        <div class="grid grid-cols-4 gap-2 md:gap-4 my-6">
+                            <div class="bg-velvet/80 border border-roseGold/20 rounded-xl p-3 md:p-4 text-center">
+                                <span id="cd-days" class="font-cinzel text-2xl md:text-4xl font-bold text-warmGold block">00</span>
+                                <span class="text-[10px] md:text-xs text-roseGold/70 uppercase font-medium">Days</span>
+                            </div>
+                            <div class="bg-velvet/80 border border-roseGold/20 rounded-xl p-3 md:p-4 text-center">
+                                <span id="cd-hours" class="font-cinzel text-2xl md:text-4xl font-bold text-warmGold block">00</span>
+                                <span class="text-[10px] md:text-xs text-roseGold/70 uppercase font-medium">Hours</span>
+                            </div>
+                            <div class="bg-velvet/80 border border-roseGold/20 rounded-xl p-3 md:p-4 text-center">
+                                <span id="cd-minutes" class="font-cinzel text-2xl md:text-4xl font-bold text-warmGold block">00</span>
+                                <span class="text-[10px] md:text-xs text-roseGold/70 uppercase font-medium">Mins</span>
+                            </div>
+                            <div class="bg-velvet/80 border border-roseGold/20 rounded-xl p-3 md:p-4 text-center">
+                                <span id="cd-seconds" class="font-cinzel text-2xl md:text-4xl font-bold text-warmGold block">00</span>
+                                <span class="text-[10px] md:text-xs text-roseGold/70 uppercase font-medium">Secs</span>
+                            </div>
+                        </div>
+
+                        <!-- Lock Banner Status -->
+                        <div id="lockBanner" class="p-4 rounded-xl bg-crimson/20 border border-crimson/40 flex items-center justify-between text-left mt-6">
+                            <div class="flex items-center space-x-3">
+                                <div id="lockIconContainer" class="w-10 h-10 rounded-full bg-crimson/40 flex items-center justify-center text-roseGold">
+                                    <i id="lockIcon" class="fa-solid fa-lock text-base"></i>
+                                </div>
+                                <div>
+                                    <h4 id="lockTitle" class="text-xs md:text-sm font-semibold text-roseGold">Website Locked Until Target Date</h4>
+                                    <p id="lockDesc" class="text-[11px] text-blushPink/80">Please wait for the timer to complete to unlock our memories!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Testing Preview Mode Unlock Switch -->
+                        <div class="mt-6 pt-4 border-t border-roseGold/10 text-center">
+                            <button onclick="bypassLockForTesting()" class="text-xs text-warmGold/70 hover:text-warmGold underline underline-offset-4 transition-colors cursor-pointer flex items-center justify-center mx-auto gap-1">
+                                <i class="fa-solid fa-key text-[10px]"></i>
+                                [ Testing Preview Mode: Click here to Unlock Immediately ]
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCREEN 2: MEMORY PHOTO GRID -->
+            <section id="screen-2" class="spa-screen">
+                <div class="text-center space-y-4 mb-8">
+                    <h2 class="font-cinzel text-2xl md:text-4xl font-bold text-warmGold">
+                        I whould like to..........
+                    </h2>
+                    <p class="text-xs md:text-sm text-roseGold/90 max-w-xl mx-auto">
+                        Click on any memory card to expand the lightbox.
+                    </p>
+                </div>
+
+                <!-- EDITABLE PLACEHOLDER GALLERY GRID -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="photoGridContainer">
+                    <!-- Cards will be dynamically loaded via JS with editability -->
+                </div>
+            </section>
+
+            <!-- SCREEN 3: SECONDS WE LOVED & QUALITY CARDS -->
+            <section id="screen-3" class="spa-screen">
+                <div class="text-center space-y-4 mb-8">
+                    <h2 class="font-cinzel text-2xl md:text-4xl font-bold text-warmGold">
+                        Seconds We've Loved Each Other
+                    </h2>
+                    <p class="text-xs md:text-sm text-roseGold/90">
+                        A real-time ticker counting every precious second since our journey began.
+                    </p>
+                </div>
+
+                <!-- Live Up-Counter Block -->
+                <div class="glass-card-gold p-6 md:p-8 rounded-2xl max-w-3xl mx-auto mb-10 text-center relative overflow-hidden">
+                    <div class="text-xs font-semibold uppercase tracking-widest text-warmGold mb-3">
+                        <i class="fa-solid fa-stopwatch text-crimson mr-2"></i> Cumulative Love Timer
+                    </div>
+                    
+                    <div class="text-3xl sm:text-5xl md:text-6xl font-cinzel font-black text-transparent bg-clip-text bg-gradient-to-r from-warmGold via-blushPink to-warmGold my-4 tracking-tight" id="totalSecondsDisplay">
+                        0,000,000
+                    </div>
+                    <p class="text-xs text-roseGold font-medium tracking-widest uppercase">Total Cumulative Seconds</p>
+
+                    <div class="grid grid-cols-3 gap-3 mt-6 pt-6 border-t border-roseGold/15">
+                        <div>
+                            <span id="sinceDays" class="text-lg md:text-2xl font-bold font-cinzel text-blushPink block">0</span>
+                            <span class="text-[10px] text-roseGold/70 uppercase">Days</span>
+                        </div>
+                        <div>
+                            <span id="sinceHours" class="text-lg md:text-2xl font-bold font-cinzel text-blushPink block">0</span>
+                            <span class="text-[10px] text-roseGold/70 uppercase">Hours</span>
+                        </div>
+                        <div>
+                            <span id="sinceMins" class="text-lg md:text-2xl font-bold font-cinzel text-blushPink block">0</span>
+                            <span class="text-[10px] text-roseGold/70 uppercase">Minutes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Qualities Header -->
+                <h3 class="font-cinzel text-xl font-bold text-center text-warmGold mb-6">
+                    Why You Mean The World To Me
+                </h3>
+
+                <!-- EDITABLE PLACEHOLDER: Quality Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5" id="qualityCardsContainer">
+                    <!-- Dynamically populated from JS -->
+                </div>
+            </section>
+
+            <!-- SCREEN 4: RELATIONSHIP LOVE QUIZ -->
+            <section id="screen-4" class="spa-screen">
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-center space-y-3 mb-6">
+                        <h2 class="font-cinzel text-2xl md:text-4xl font-bold text-warmGold">
+                            How Well Do You Know ME
+                        </h2>
+                        <p class="text-xs md:text-sm text-roseGold/90">
+                            Test how well you remember our special moments!
+                        </p>
+                    </div>
+
+                    <!-- Quiz Container Card -->
+                    <div class="glass-card rounded-2xl p-6 md:p-8 relative">
+                        
+                        <!-- Quiz Header Info -->
+                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-roseGold/15">
+                            <span id="quizCounterText" class="text-xs font-semibold text-warmGold uppercase tracking-wider">
+                                Question 1 of 4
+                            </span>
+                            <span id="quizScoreBadge" class="px-3 py-1 rounded-full bg-crimson/30 border border-crimson/50 text-xs text-blushPink">
+                                Score: 0
+                            </span>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-velvet/80 h-2 rounded-full overflow-hidden mb-6 border border-roseGold/10">
+                            <div id="quizProgressBar" class="bg-gradient-to-r from-crimson to-warmGold h-full w-1/4 transition-all duration-500"></div>
+                        </div>
+
+                        <!-- Question Display -->
+                        <div id="quizBody">
+                            <h3 id="quizQuestionText" class="font-cinzel text-base md:text-xl font-bold text-blushPink mb-6">
+                                Loading question...
+                            </h3>
+
+                            <!-- Choices -->
+                            <div id="quizOptionsContainer" class="space-y-3">
+                                <!-- Dynamically populated options -->
+                            </div>
+                        </div>
+
+                        <!-- Quiz Finished Result Card (Initially hidden) -->
+                        <div id="quizResultBox" class="hidden text-center py-6 space-y-6">
+                            <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-warmGold to-crimson p-1 flex items-center justify-center animate-bounce">
+                                <div class="w-full h-full bg-velvet rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-crown text-3xl text-warmGold"></i>
+                                </div>
+                            </div>
+                            
+                            <h3 class="font-cinzel text-2xl font-bold text-warmGold">Quiz Completed!</h3>
+                            <p id="quizFinalMsg" class="text-sm text-roseGold max-w-md mx-auto">
+                                You scored 4 out of 4! You truly remember every beautiful detail of us.
+                            </p>
+
+                            <button onclick="goToScreen(5)" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-crimson via-warmGold to-crimson text-velvet font-bold text-sm tracking-wider uppercase shadow-lg shadow-crimson/40 hover:scale-105 transition-transform duration-300">
+                                Claim Your Love Letter <i class="fa-solid fa-envelope-open-text ml-2"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SCREEN 5: ANIMATED LOVE LETTER & WAX SEAL ENVELOPE -->
+            <section id="screen-5" class="spa-screen">
+                <div class="text-center space-y-3 mb-8">
+                    <h2 class="font-cinzel text-2xl md:text-4xl font-bold text-warmGold">
+                        A Private Sealed Message Only For Youuuu!!!!
+                    </h2>
+                    <p class="text-xs md:text-sm text-roseGold/90">
+                        Click on the wax seal below to open your personalized anniversary letter.
+                    </p>
+                </div>
+
+                <!-- ENVELOPE CONTAINER -->
+                <div class="envelope-wrapper flex flex-col items-center justify-center my-6">
+                    
+                    <div id="interactiveEnvelope" onclick="openLoveLetterEnvelope()" class="envelope">
+                        <!-- Envelope Flap -->
+                        <div class="envelope-flap"></div>
+                        
+                        <!-- Wax Seal -->
+                        <div class="wax-seal">
+                            <i class="fa-solid fa-heart text-warmGold text-xl"></i>
+                        </div>
+
+                        <!-- Preview Card snippet inside envelope -->
+                        <div class="absolute inset-x-4 top-10 bottom-4 bg-blushPink/10 rounded border border-roseGold/20 flex items-center justify-center text-center p-4">
+                            <p class="font-dancing text-lg text-roseGold/80">To My Babeeeee , With All My Love...</p>
+                        </div>
+                    </div>
+
+                    <!-- UNFOLDED LETTER CONTAINER (Hidden until seal clicked) -->
+                    <div id="unfoldedLetterModal" class="hidden w-full max-w-2xl mt-8 transition-all duration-700">
+                        <div class="letter-content rounded-xl p-6 sm:p-10 border-2 border-warmGold/40 shadow-2xl relative overflow-hidden">
+                            
+                            <!-- Golden Corner Decorative Accents -->
+                            <div class="absolute top-3 left-3 text-warmGold/40 text-xs"><i class="fa-solid fa-crown"></i></div>
+                            <div class="absolute top-3 right-3 text-warmGold/40 text-xs"><i class="fa-solid fa-crown"></i></div>
+                            <div class="absolute bottom-3 left-3 text-warmGold/40 text-xs"><i class="fa-solid fa-crown"></i></div>
+                            <div class="absolute bottom-3 right-3 text-warmGold/40 text-xs"><i class="fa-solid fa-crown"></i></div>
+
+                            <!-- EDITABLE PLACEHOLDER: Love Letter Heading & Body Text -->
+                            <div class="text-center mb-6">
+                                <p class="text-xs font-semibold tracking-widest text-crimson uppercase">My Dearest Babeee</p>
+                                <h3 class="font-cinzel text-2xl md:text-3xl font-bold text-velvet mt-1">Happy Anniversary, My Love</h3>
+                                <div class="w-16 h-0.5 bg-warmGold mx-auto mt-2"></div>
+                            </div>
+
+                            <div class="font-dancing text-xl sm:text-2xl text-velvet font-medium space-y-4 leading-relaxed">
+                                <p>
+                                    My Dearest Babeeeee,
+                                </p>
+                                <p>
+                                    From the moment you entered my life, everything became brighter, warmer, and endlessly more beautiful. Your smile lightens up my darkest days, and your gentle soul is my ultimate safe haven.
+                                </p>
+                                <p>
+                                    Thank you for every shared laugh, every late-night conversation, and every quiet moment where we simply enjoyed being beside each other. You make loving you the easiest thing in the world.
+                                </p>
+                                <p>
+                                    As we celebrate today, I promise to cherish, protect, and stand by you through all the tomorrows yet to come. You will forever be my home.
+                                </p>
+                                <p class="text-right pt-4 font-bold text-crimson">
+                                    Forever Yours,<br>
+                                    <span class="font-cinzel text-lg">Your Partner</span>
+                                </p>
+                            </div>
+
+                            <!-- Interactive Button Options on Letter -->
+                            <div class="mt-8 pt-6 border-t border-warmGold/30 flex flex-wrap items-center justify-center gap-3">
+                                <button onclick="resetEnvelopeAnimation()" class="px-4 py-2 rounded-full bg-velvet text-warmGold border border-warmGold/50 text-xs font-medium hover:bg-crimson hover:text-white transition-colors">
+                                    <i class="fa-solid fa-rotate-left mr-1"></i> Replay Envelope
+                                </button>
+                                
+                                <button onclick="triggerLoveShower()" class="px-5 py-2 rounded-full bg-gradient-to-r from-crimson to-warmGold text-white font-bold text-xs hover:scale-105 transition-transform shadow-md">
+                                    <i class="fa-solid fa-heart mr-1"></i> Send Big Heart Hug
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+        <!-- FOOTER SPA CONTROLS -->
+        <footer class="px-4 py-4 max-w-6xl mx-auto w-full glass-card rounded-t-2xl border-b-0 flex items-center justify-between mt-auto">
+            
+            <!-- Previous Button -->
+            <button id="prevBtn" onclick="navigateScreen(-1)" class="px-4 py-2 rounded-full bg-velvet/80 border border-roseGold/30 text-roseGold hover:text-white hover:border-warmGold transition-all text-xs font-semibold flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed">
+                <i class="fa-solid fa-chevron-left text-[10px]"></i> Previous
+            </button>
+
+            <!-- Screen Step Counter / Quick Jump menu -->
+            <div class="flex items-center gap-2">
+                <span id="screenCounterText" class="text-xs text-roseGold font-medium">Page 1 of 5</span>
+            </div>
+
+            <!-- Next Button -->
+            <button id="nextBtn" onclick="navigateScreen(1)" class="px-5 py-2 rounded-full bg-gradient-to-r from-crimson to-warmGold text-velvet font-bold text-xs hover:scale-105 transition-transform shadow-lg shadow-crimson/30 flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100">
+                Next <i class="fa-solid fa-chevron-right text-[10px]"></i>
+            </button>
+        </footer>
+
+    </div>
+
+    <!-- MODAL 1: PHOTO LIGHTBOX -->
+    <div id="photoModal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="relative max-w-2xl w-full glass-card-gold rounded-2xl overflow-hidden p-4 sm:p-6 text-center">
+            
+            <button onclick="closePhotoModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-crimson/50 text-white flex items-center justify-center hover:bg-crimson transition-colors z-10">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <img id="modalImg" src="" alt="Memory detail" class="w-full h-64 sm:h-80 object-cover rounded-xl border border-roseGold/30 mb-4">
+            
+            <span id="modalDate" class="text-[10px] font-semibold tracking-widest text-warmGold uppercase bg-crimson/30 px-3 py-1 rounded-full">Date</span>
+            <h3 id="modalTitle" class="font-cinzel text-xl font-bold text-blushPink mt-3">Memory Title</h3>
+            <p id="modalCaption" class="text-xs sm:text-sm text-roseGold/90 my-3">Memory Caption text goes here...</p>
+
+            <button onclick="spawnHeartReaction(event)" class="mt-2 px-6 py-2 rounded-full bg-gradient-to-r from-crimson to-blushPink text-white text-xs font-bold shadow-md hover:scale-105 transition-transform flex items-center justify-center gap-2 mx-auto">
+                <i class="fa-solid fa-heart text-white"></i> Send Love Reaction
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: QUALITY EXPANDED NOTE -->
+    <div id="qualityModal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="relative max-w-md w-full glass-card rounded-2xl p-6 text-center border border-warmGold/40">
+            <button onclick="closeQualityModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-crimson/40 text-white flex items-center justify-center hover:bg-crimson transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div id="qualityModalIcon" class="w-16 h-16 mx-auto rounded-full bg-crimson/30 flex items-center justify-center text-warmGold text-2xl mb-4 border border-warmGold/30">
+                <i class="fa-solid fa-star"></i>
+            </div>
+
+            <h3 id="qualityModalTitle" class="font-cinzel text-xl font-bold text-warmGold mb-2">Quality Title</h3>
+            <p id="qualityModalDesc" class="text-xs sm:text-sm text-roseGold leading-relaxed">Quality detail content...</p>
+        </div>
+    </div>
+
+    <script>
+        /* ===================================================================
+           EDITABLE CONFIGURATION DATA (CUSTOMIZE YOUR DATES & CONTENT HERE)
+           =================================================================== */
+
+        // 1. COUNTDOWN TARGET DATE (Screen 1)
+        // Set your target anniversary date (Format: YYYY-MM-DDTHH:MM:SS)
+        const TARGET_ANNIVERSARY_DATE = new Date('2026-10-23T00:00:00');
+
+        // 2. RELATIONSHIP START DATE (Screen 3 - "Seconds We Loved")
+        // Set the exact date/time you became a couple
+        const RELATIONSHIP_START_DATE = new Date('2021-10-23T00:00:00');
+
+        // 3. MEMORY PHOTO GALLERY ITEMS (Screen 2)
+        const MEMORY_GALLERY = [
+            {
+                id: 1,
+                title: "",
+                date: "",
+                image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80",
+                caption: "The evening where time stood still, and I knew my heart belonged to you.",
+                tag: "First Date"
+            },
+            {
+                id: 2,
+                title: "",
+                date: "",
+                image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=800&q=80",
+                caption: "Surprising youu with red roses, though no flower could match your beauty.",
+                tag: "Romance"
+            },
+            {
+                id: 3,
+                title: "",
+                date: "",
+                image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80",
+                caption: "Watching the golden sky reflect in your eyes while holding hands.",
+                tag: "Golden Hour"
+            },
+            {
+                id: 4,
+                title: "",
+                date: "",
+                image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80",
+                caption: "Looking at stars and realizing the brightest star in my universe is you.",
+                tag: "Stargazing"
+            },
+            {
+                id: 5,
+                title: "",
+                date: "",
+                image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
+                caption: "Warm cups, sweet smiles, and conversations that lasted for hours.",
+                tag: "Cozy"
+            },
+            {
+                id: 6,
+                title: "",
+                date: "",
+                image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80",
+                caption: "Wrapped in warmth, celebrating love, and looking forward to forever.",
+                tag: "Milestone"
+            }
+        ];
+
+        // 4. WHY I LOVE YOU QUALITY CARDS (Screen 3)
+        const LOVE_QUALITIES = [
+            {
+                icon: "fa-face-smile-beam",
+                title: "Your Radiant Smile",
+                shortNote: "It instantly brightens my darkest days and fills the room with warmth.",
+                fullNote: "Babeee, your smile has a magical way of making all my worries vanish. It's the sweetest view in the world."
+            },
+            {
+                icon: "fa-heart-circle-bolt",
+                title: "Your Gentle Soul",
+                shortNote: "Your empathy, kindness, and loving spirit inspire me to be a better person.",
+                fullNote: "The genuine care and kindness you show to everyone around you is one of the many reasons I fall deeper in love with you every day."
+            },
+            {
+                icon: "fa-shield-heart",
+                title: "My Safe Haven",
+                shortNote: "In your arms, I feel a sense of peace and belonging like nowhere else.",
+                fullNote: "No matter how turbulent the world gets, being near you feels like coming home. You are my tranquility."
+            },
+            {
+                icon: "fa-face-laugh-squint",
+                title: "Your Playful Laugh",
+                shortNote: "The melody of your laughter is my favorite sound in the universe.",
+                fullNote: "Sharing silly jokes and hearing you laugh heart-felt is pure joy. I promise to keep making you smile forever."
+            },
+            {
+                icon: "fa-hand-holding-heart",
+                title: "Your Endless Support",
+                shortNote: "You always believe in me, encourage my dreams, and stand by my side.",
+                fullNote: "Thank you for being my biggest cheerleader, my closest confidante, and my constant rock."
+            },
+            {
+                icon: "fa-infinity",
+                title: "Our Unbreakable Bond",
+                shortNote: "The effortless connection and deep understanding we share every day.",
+                fullNote: "What we have is rare and special. Every conversation, shared glance, and quiet moment reinforces our love."
+            }
+        ];
+
+        // 5. RELATIONSHIP QUIZ DATA (Screen 4)
+        const QUIZ_QUESTIONS = [
+            {
+                question: "What is OUR absolute favorite way to spend a romantic evening?",
+                options: [
+                    "Fancy 5-star launch",
+                    "A rainy day, blanket, movies and cuddles",
+                    "Long late-night drive under the stars",
+                    "Quiet walks in nature"
+                ],
+                correctIndex: 1,
+                comment: "Correct! Nothing beats cozy movie nights together! ❤️"
+            },
+            {
+                question: "Which quality made me fall in love with Sana first?",
+                options: [
+                    "Your captivating smile",
+                    "Your warm, caring heart",
+                    "Your quick sense of humor",
+                    "All of the above combined!"
+                ],
+                correctIndex: 0,
+                comment: "Spot on! Everything about you stole my heart immediately! ✨"
+            },
+            {
+                question: "What is our golden rule whenever we face any disagreement?",
+                options: [
+                    "Never go to sleep upset and talk things out softly",
+                    "Flip a coin to decide who wins",
+                    "Eat ice cream first before talking",
+                    "Send funny memes until we laugh"
+                ],
+                correctIndex: 0,
+                comment: "Yes! Communication and gentle love always win! 🌹"
+            },
+            {
+                question: "How long do I plan on loving Youuuuuuu ?",
+                options: [
+                    "For the next 50 years",
+                    "To the moon and back",
+                    "Forever and a day beyond infinity",
+                    "Until the stars stop shining"
+                ],
+                correctIndex: 2,
+                comment: "Bingo! Forever and ever, my love! 💍"
+            }
+        ];
+
+        /* ===================================================================
+           STATE MANAGEMENT & INITIALIZATION
+           =================================================================== */
+        let currentScreen = 1;
+        const totalScreens = 5;
+        let isUnlocked = false;
+        let audioContext = null;
+        let ambientGainNode = null;
+        let isAudioPlaying = false;
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+
+        window.onload = function() {
+            initBackgroundCanvas();
+            renderProgressDots();
+            renderPhotoGallery();
+            renderQualityCards();
+            loadQuizQuestion();
+            startCountdownTimer();
+            startSecondsLovedTimer();
+            updateNavigationControls();
+        };
+
+        /* ===================================================================
+           BACKGROUND PARTICLES CANVAS (Floating Hearts & Gold Stardust)
+           =================================================================== */
+        function initBackgroundCanvas() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = [];
+            const particleCount = 45;
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = height + Math.random() * 100;
+                    this.size = Math.random() * 12 + 8;
+                    this.speedY = Math.random() * 0.8 + 0.3;
+                    this.speedX = (Math.random() - 0.5) * 0.4;
+                    this.opacity = Math.random() * 0.6 + 0.2;
+                    this.isHeart = Math.random() > 0.4; // 60% hearts, 40% gold dust
+                    this.rotation = Math.random() * Math.PI * 2;
+                    this.rotSpeed = (Math.random() - 0.5) * 0.02;
+                }
+
+                update() {
+                    this.y -= this.speedY;
+                    this.x += Math.sin(this.y * 0.01) * 0.5 + this.speedX;
+                    this.rotation += this.rotSpeed;
+
+                    if (this.y < -30) {
+                        this.reset();
+                    }
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.rotation);
+                    ctx.globalAlpha = this.opacity;
+
+                    if (this.isHeart) {
+                        // Draw Blush Pink Heart
+                        ctx.fillStyle = '#FFB6C1';
+                        ctx.beginPath();
+                        const topCurveHeight = this.size * 0.3;
+                        ctx.moveTo(0, topCurveHeight);
+                        // top left curve
+                        ctx.bezierCurveTo(
+                            0, 0, 
+                            -this.size / 2, 0, 
+                            -this.size / 2, topCurveHeight
+                        );
+                        // bottom left curve
+                        ctx.bezierCurveTo(
+                            -this.size / 2, (this.size + topCurveHeight) / 2, 
+                            0, this.size, 
+                            0, this.size
+                        );
+                        // bottom right curve
+                        ctx.bezierCurveTo(
+                            0, this.size, 
+                            this.size / 2, (this.size + topCurveHeight) / 2, 
+                            this.size / 2, topCurveHeight
+                        );
+                        // top right curve
+                        ctx.bezierCurveTo(
+                            this.size / 2, 0, 
+                            0, 0, 
+                            0, topCurveHeight
+                        );
+                        ctx.closePath();
+                        ctx.fill();
+                    } else {
+                        // Draw Gold Stardust Glowing Dot
+                        ctx.fillStyle = '#D4AF37';
+                        ctx.beginPath();
+                        ctx.arc(0, 0, this.size / 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 8;
+                        ctx.shadowColor = '#D4AF37';
+                    }
+
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                const p = new Particle();
+                p.y = Math.random() * height; // initial spread
+                particles.push(p);
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        /* ===================================================================
+           WEB AUDIO API SYNTHESIZER (Sound Effects & Ambient Tone)
+           =================================================================== */
+        function playChimeSound(type = 'click') {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); // A5
+                    gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.25);
+                } else if (type === 'unlock' || type === 'success') {
+                    // Arpeggio chord sweep
+                    const notes = [523.25, 659.25, 783.99, 1046.50]; // C E G C
+                    notes.forEach((freq, idx) => {
+                        const noteOsc = ctx.createOscillator();
+                        const noteGain = ctx.createGain();
+                        noteOsc.type = 'triangle';
+                        noteOsc.frequency.value = freq;
+                        noteOsc.connect(noteGain);
+                        noteGain.connect(ctx.destination);
+
+                        const startTime = ctx.currentTime + (idx * 0.08);
+                        noteGain.gain.setValueAtTime(0.2, startTime);
+                        noteGain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.5);
+
+                        noteOsc.start(startTime);
+                        noteOsc.stop(startTime + 0.5);
+                    });
+                }
+            } catch (e) {
+                console.log("Audio playback muted or restricted:", e);
+            }
+        }
+
+        function toggleAmbientAudio() {
+            const btnText = document.getElementById('audioStatusText');
+            const icon = document.getElementById('audioIcon');
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (!isAudioPlaying) {
+                audioContext.resume();
+                // Synthesize ambient soft pad drone tone
+                const osc1 = audioContext.createOscillator();
+                const osc2 = audioContext.createOscillator();
+                ambientGainNode = audioContext.createGain();
+
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(220, audioContext.currentTime); // A3
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(329.63, audioContext.currentTime); // E4
+
+                ambientGainNode.gain.setValueAtTime(0.01, audioContext.currentTime);
+                ambientGainNode.gain.linearRampToValueAtTime(0.08, audioContext.currentTime + 2);
+
+                osc1.connect(ambientGainNode);
+                osc2.connect(ambientGainNode);
+                ambientGainNode.connect(audioContext.destination);
+
+                osc1.start();
+                osc2.start();
+
+                isAudioPlaying = true;
+                btnText.textContent = "Sound: On";
+                icon.className = "fa-solid fa-volume-high text-xs text-warmGold animate-pulse";
+                playChimeSound('click');
+            } else {
+                if (ambientGainNode) {
+                    ambientGainNode.gain.linearRampToValueAtTime(0.001, audioContext.currentTime + 0.5);
+                }
+                isAudioPlaying = false;
+                btnText.textContent = "Sound: Off";
+                icon.className = "fa-solid fa-music text-xs group-hover:scale-110 transition-transform";
+            }
+        }
+
+        /* ===================================================================
+           SPA NAVIGATION & PROGRESS DOTS
+           =================================================================== */
+        function renderProgressDots() {
+            const container = document.getElementById('progressDotsContainer');
+            container.innerHTML = '';
+            for (let i = 1; i <= totalScreens; i++) {
+                const dot = document.createElement('button');
+                dot.onclick = () => { if (i <= currentScreen || isUnlocked) goToScreen(i); };
+                dot.className = `w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === currentScreen ? 'bg-warmGold w-6' : 'bg-roseGold/30 hover:bg-roseGold/60'}`;
+                container.appendChild(dot);
+            }
+        }
+
+        function updateNavigationControls() {
+            document.getElementById('screenCounterText').textContent = `Page ${currentScreen} of ${totalScreens}`;
+            renderProgressDots();
+
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = (currentScreen === 1);
+
+            // Screen 1 Lock Check
+            if (currentScreen === 1 && !isUnlocked) {
+                nextBtn.disabled = true;
+                nextBtn.classList.add('opacity-40', 'cursor-not-allowed');
+            } else {
+                nextBtn.disabled = (currentScreen === totalScreens);
+                nextBtn.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+        }
+
+        function goToScreen(screenNumber) {
+            if (screenNumber < 1 || screenNumber > totalScreens) return;
+            if (screenNumber > 1 && !isUnlocked) {
+                playChimeSound('click');
+                alert("Please unlock Screen 1 first or click '[ Testing Preview Mode ]'!");
+                return;
+            }
+
+            playChimeSound('click');
+
+            const currentEl = document.getElementById(`screen-${currentScreen}`);
+            const nextEl = document.getElementById(`screen-${screenNumber}`);
+
+            if (currentEl) currentEl.classList.remove('active');
+            
+            currentScreen = screenNumber;
+
+            setTimeout(() => {
+                if (nextEl) nextEl.classList.add('active');
+                updateNavigationControls();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 100);
+        }
+
+        function navigateScreen(direction) {
+            goToScreen(currentScreen + direction);
+        }
+
+        /* ===================================================================
+           SCREEN 1: ANNIVERSARY COUNTDOWN & LOCK SCREEN LOGIC
+           =================================================================== */
+        function startCountdownTimer() {
+            function updateCD() {
+                const now = new Date();
+                const diff = TARGET_ANNIVERSARY_DATE - now;
+
+                if (diff <= 0) {
+                    // Countdown complete! Unlock automatically
+                    document.getElementById('cd-days').textContent = '00';
+                    document.getElementById('cd-hours').textContent = '00';
+                    document.getElementById('cd-minutes').textContent = '00';
+                    document.getElementById('cd-seconds').textContent = '00';
+                    unlockWebsite();
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('cd-days').textContent = String(days).padStart(2, '0');
+                document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+            }
+
+            updateCD();
+            setInterval(updateCD, 1000);
+        }
+
+        function unlockWebsite() {
+            if (isUnlocked) return;
+            isUnlocked = true;
+
+            const lockBanner = document.getElementById('lockBanner');
+            const lockIcon = document.getElementById('lockIcon');
+            const lockTitle = document.getElementById('lockTitle');
+            const lockDesc = document.getElementById('lockDesc');
+
+            lockBanner.className = "p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between text-left mt-6 shadow-lg shadow-emerald-900/20";
+            lockIcon.className = "fa-solid fa-lock-open text-emerald-400 text-base";
+            lockTitle.className = "text-xs md:text-sm font-semibold text-emerald-300";
+            lockTitle.textContent = "Portal Unlocked & Ready!";
+            lockDesc.textContent = "Press 'Next' below to start exploring our memory deck!";
+
+            updateNavigationControls();
+            playChimeSound('unlock');
+
+            // Trigger Heart & Sparkle Confetti Blast
+            if (window.confetti) {
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#FFB6C1', '#D4AF37', '#8B0000', '#E8A598']
+                });
+            }
+        }
+
+        function bypassLockForTesting() {
+            unlockWebsite();
+        }
+
+        /* ===================================================================
+           SCREEN 2: MEMORY PHOTO GRID & LIGHTBOX
+           =================================================================== */
+        function renderPhotoGallery() {
+            const container = document.getElementById('photoGridContainer');
+            container.innerHTML = '';
+
+            MEMORY_GALLERY.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl overflow-hidden group hover:-translate-y-2 hover:border-warmGold/50 transition-all duration-300 cursor-pointer shadow-lg";
+                card.onclick = () => openPhotoModal(item);
+
+                card.innerHTML = `
+                    <div class="relative h-48 sm:h-52 overflow-hidden">
+                        <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-velvet via-transparent to-transparent opacity-80"></div>
+                        <span class="absolute top-3 left-3 bg-crimson/80 backdrop-blur-md border border-roseGold/30 text-[10px] font-semibold text-blushPink px-2.5 py-1 rounded-full uppercase">
+                            ${item.tag}
+                        </span>
+                        <span class="absolute bottom-3 right-3 text-xs text-warmGold font-cinzel font-semibold">
+                            <i class="fa-regular fa-calendar-heart mr-1"></i> ${item.date}
+                        </span>
+                    </div>
+                    <div class="p-4 text-left">
+                        <h3 class="font-cinzel text-base font-bold text-blushPink group-hover:text-warmGold transition-colors">${item.title}</h3>
+                        <p class="text-xs text-roseGold/80 line-clamp-2 mt-1">${item.caption}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openPhotoModal(item) {
+            playChimeSound('click');
+            document.getElementById('modalImg').src = item.image;
+            document.getElementById('modalDate').textContent = item.date;
+            document.getElementById('modalTitle').textContent = item.title;
+            document.getElementById('modalCaption').textContent = item.caption;
+
+            const modal = document.getElementById('photoModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closePhotoModal() {
+            playChimeSound('click');
+            const modal = document.getElementById('photoModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function spawnHeartReaction(event) {
+            playChimeSound('click');
+            const btn = event.currentTarget;
+            const heart = document.createElement('i');
+            heart.className = "fa-solid fa-heart text-blushPink text-xl floating-heart-particle";
+            
+            const rect = btn.getBoundingClientRect();
+            heart.style.left = `${rect.left + rect.width / 2 - 10}px`;
+            heart.style.top = `${rect.top - 10}px`;
+
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1800);
+        }
+
+        /* ===================================================================
+           SCREEN 3: "SECONDS WE LOVED" & QUALITY CARDS
+           =================================================================== */
+        function startSecondsLovedTimer() {
+            function updateLovedCounter() {
+                const now = new Date();
+                const diff = now - RELATIONSHIP_START_DATE;
+
+                if (diff < 0) return;
+
+                const totalSecs = Math.floor(diff / 1000);
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+                document.getElementById('totalSecondsDisplay').textContent = totalSecs.toLocaleString();
+                document.getElementById('sinceDays').textContent = days.toLocaleString();
+                document.getElementById('sinceHours').textContent = hours;
+                document.getElementById('sinceMins').textContent = mins;
+            }
+
+            updateLovedCounter();
+            setInterval(updateLovedCounter, 1000);
+        }
+
+        function renderQualityCards() {
+            const container = document.getElementById('qualityCardsContainer');
+            container.innerHTML = '';
+
+            LOVE_QUALITIES.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-5 rounded-2xl text-left border border-roseGold/20 hover:border-warmGold/60 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group";
+                card.onclick = () => openQualityModal(item);
+
+                card.innerHTML = `
+                    <div class="w-12 h-12 rounded-xl bg-crimson/30 border border-warmGold/30 flex items-center justify-center text-warmGold text-xl mb-4 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid ${item.icon}"></i>
+                    </div>
+                    <h4 class="font-cinzel text-base font-bold text-blushPink group-hover:text-warmGold transition-colors">${item.title}</h4>
+                    <p class="text-xs text-roseGold/80 mt-2 line-clamp-2">${item.shortNote}</p>
+                    <span class="text-[10px] text-warmGold/70 font-semibold mt-3 inline-block uppercase tracking-wider group-hover:text-warmGold">
+                        Read more <i class="fa-solid fa-arrow-right text-[8px] ml-1"></i>
+                    </span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openQualityModal(item) {
+            playChimeSound('click');
+            document.getElementById('qualityModalIcon').innerHTML = `<i class="fa-solid ${item.icon}"></i>`;
+            document.getElementById('qualityModalTitle').textContent = item.title;
+            document.getElementById('qualityModalDesc').textContent = item.fullNote;
+
+            const modal = document.getElementById('qualityModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeQualityModal() {
+            playChimeSound('click');
+            const modal = document.getElementById('qualityModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        /* ===================================================================
+           SCREEN 4: RELATIONSHIP LOVE QUIZ LOGIC
+           =================================================================== */
+        function loadQuizQuestion() {
+            const q = QUIZ_QUESTIONS[currentQuizIndex];
+            document.getElementById('quizCounterText').textContent = `Question ${currentQuizIndex + 1} of ${QUIZ_QUESTIONS.length}`;
+            document.getElementById('quizQuestionText').textContent = q.question;
+
+            const progressPct = ((currentQuizIndex + 1) / QUIZ_QUESTIONS.length) * 100;
+            document.getElementById('quizProgressBar').style.width = `${progressPct}%`;
+
+            const optionsContainer = document.getElementById('quizOptionsContainer');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((optionText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full p-4 rounded-xl bg-velvet/80 border border-roseGold/20 text-left text-xs md:text-sm text-blushPink hover:border-warmGold transition-all flex items-center justify-between group";
+                btn.onclick = () => selectQuizAnswer(idx, btn);
+
+                btn.innerHTML = `
+                    <span>${optionText}</span>
+                    <i class="fa-regular fa-circle text-roseGold/40 group-hover:text-warmGold"></i>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectQuizAnswer(selectedIndex, btnElement) {
+            const q = QUIZ_QUESTIONS[currentQuizIndex];
+            const isCorrect = (selectedIndex === q.correctIndex);
+
+            playChimeSound(isCorrect ? 'success' : 'click');
+
+            // Disable all options momentarily
+            const allBtns = document.getElementById('quizOptionsContainer').children;
+            for (let b of allBtns) {
+                b.disabled = true;
+                b.classList.add('opacity-60');
+            }
+
+            if (isCorrect) {
+                quizScore++;
+                document.getElementById('quizScoreBadge').textContent = `Score: ${quizScore}`;
+                btnElement.className = "w-full p-4 rounded-xl bg-emerald-950/60 border border-emerald-500 text-left text-xs md:text-sm text-emerald-200 flex items-center justify-between";
+                btnElement.innerHTML += `<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>`;
+            } else {
+                btnElement.className = "w-full p-4 rounded-xl bg-rose-950/60 border border-rose-500 text-left text-xs md:text-sm text-rose-200 flex items-center justify-between";
+                btnElement.innerHTML += `<i class="fa-solid fa-circle-xmark text-rose-400 text-base"></i>`;
+            }
+
+            setTimeout(() => {
+                currentQuizIndex++;
+                if (currentQuizIndex < QUIZ_QUESTIONS.length) {
+                    loadQuizQuestion();
+                } else {
+                    showQuizResults();
+                }
+            }, 1200);
+        }
+
+        function showQuizResults() {
+            document.getElementById('quizBody').classList.add('hidden');
+            const resultBox = document.getElementById('quizResultBox');
+            resultBox.classList.remove('hidden');
+
+            const finalMsg = document.getElementById('quizFinalMsg');
+            finalMsg.textContent = `You scored ${quizScore} out of ${QUIZ_QUESTIONS.length}! ${quizScore === QUIZ_QUESTIONS.length ? 'Perfect score! You know our story inside out!' : 'Beautiful attempt! You are my absolute world!'}`;
+
+            playChimeSound('unlock');
+        }
+
+        /* ===================================================================
+           SCREEN 5: ANIMATED LOVE LETTER & ENVELOPE LOGIC
+           =================================================================== */
+        function openLoveLetterEnvelope() {
+            const envelope = document.getElementById('interactiveEnvelope');
+            const letterModal = document.getElementById('unfoldedLetterModal');
+
+            if (envelope.classList.contains('open')) return;
+
+            playChimeSound('unlock');
+            envelope.classList.add('open');
+
+            setTimeout(() => {
+                letterModal.classList.remove('hidden');
+                letterModal.scrollIntoView({ behavior: 'smooth' });
+                
+                // Trigger celebratory sparkle
+                if (window.confetti) {
+                    confetti({
+                        particleCount: 50,
+                        spread: 60,
+                        origin: { y: 0.7 }
+                    });
+                }
+            }, 700);
+        }
+
+        function resetEnvelopeAnimation() {
+            playChimeSound('click');
+            const envelope = document.getElementById('interactiveEnvelope');
+            const letterModal = document.getElementById('unfoldedLetterModal');
+
+            envelope.classList.remove('open');
+            letterModal.classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function triggerLoveShower() {
+            playChimeSound('unlock');
+            
+            // Fullscreen heart blast
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('i');
+                    heart.className = "fa-solid fa-heart text-crimson text-2xl floating-heart-particle";
+                    heart.style.left = `${Math.random() * 90 + 5}%`;
+                    heart.style.top = `${Math.random() * 50 + 40}%`;
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 80);
+            }
+
+            if (window.confetti) {
+                confetti({
+                    particleCount: 100,
+                    spread: 100,
+                    colors: ['#8B0000', '#FFB6C1', '#D4AF37']
+                });
+            }
+        }
+    </script>
+</body>
+</html>
